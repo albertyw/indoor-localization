@@ -1,8 +1,17 @@
-import json
+"""
+Flask server to accept data from android phones
+"""
 
-from flask import Flask
-from flask import request
+import json
+import sqlite3
+import os
+import sys
+server_path = os.path.dirname(os.path.realpath(__file__))
+
+from flask import Flask, request, g
 app = Flask(__name__)
+
+database = server_path + 'db.sqlite'
 
 @app.route("/")
 def hello():
