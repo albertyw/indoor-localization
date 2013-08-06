@@ -19,6 +19,7 @@ class ParticleFilter:
     
     def observe(self, observation):
         # consume observation
+        # observation is a list of all the data received from the app
         self.normalize()
         self.resample()
 
