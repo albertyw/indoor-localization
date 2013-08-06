@@ -37,12 +37,8 @@ public class StartLocating extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-                //List data = scan();
-                List<HashMap> data = new LinkedList<HashMap>();
-                HashMap datum = new HashMap();
-                datum.put("name", "test");
-                data.add(datum);
-		        String jsonStringified = JSONValue.toJSONString(data);
+                List data = scan();
+                String jsonStringified = JSONValue.toJSONString(data);
 		        
 		        Log.d(C.TAG, "JSON encoded data: " + jsonStringified);
 				Networking.postData(C.SERVER + "push", jsonStringified);
@@ -50,21 +46,20 @@ public class StartLocating extends Activity {
 		});
         
     }
-/*
+
     protected List scan() {
         mainWifi.startScan();
         List<ScanResult> wifiList = mainWifi.getScanResults();
         List<HashMap> data = new LinkedList<HashMap>();
         for(int i = 0; i < wifiList.size(); i++){
             HashMap datum = new HashMap();
+            datum.put("name", wifiList.get(i).BSSID);
             datum.put("bssid", wifiList.get(i).BSSID);
             datum.put("level", wifiList.get(i).level);
-            datum.put("timestamp", wifiList.get(i).timestamp);
             data.add(datum);
         }
         return data;
     }
-*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
