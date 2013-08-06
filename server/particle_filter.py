@@ -15,12 +15,31 @@ class ParticleFilter:
             particle['position'] = (uniform(0, self.grid_dim[0]),
                                     uniform(0, self.grid_dim[1]))
             particle['heading'] = uniform(0, 360)
-            
-    
-    def observe(self, observation):
+
+    def observe(self, observations):
         # consume observation
+        for observation in observations:
+            name = observation['name']
+            data = observation['data']
+            if name == 'wifi':
+                self.consumeWifi(data)
+            elif name == 'heading':
+                self.consumeHeading(data)
+            elif name == 'steps':
+                self.consumeSteps(data)
+            else:
+                raise Exception('Not valid observation name!')
         self.normalize()
         self.resample()
+
+    def consumeWifi(self, data):
+        pass
+
+    def consumeHeading(self, data):
+        pass
+    
+    def consumeSteps(self, data):
+        pass
 
     def normalize(self):
         sum = 0.0
