@@ -1,13 +1,15 @@
 package com.Localization;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
-import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -26,6 +28,9 @@ import org.json.simple.JSONValue;
 public class StartLocating extends Activity {
 
 	WifiManager mainWifi;
+    SensorManager sensorManager;
+    Sensor accSensor;
+    List accSensorReadings;
 
 	Handler dataPushHandler;
 	boolean dataPushHandlerActive;
@@ -64,9 +69,7 @@ public class StartLocating extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_start_locating);
-		mainWifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		dataPushHandler = new Handler();
-
 		dataPushHandlerActive = false;
 		ErrorReporting.initialize(this);
 
@@ -89,7 +92,28 @@ public class StartLocating extends Activity {
 			}
 		});
 
-	}
+        // Sensors
+        mainWifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        /*
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        accSensorReadings = new LinkedList();
+        sensorManager.registerListener(new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                HashMap reading = new HashMap();
+                reading.put("x", event.values[0]);
+                reading.put("y", event.values[1]);
+                reading.put("z", event.values[2]);
+                Log.d(C.TAG, "x"+Float.toString(event.values[0]));
+                //accSensorReadings.add(reading);
+            }
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy){}
+        }, accSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        */
+    }
+
 	// Adds data to target if data is not null and denotes it as name
 	private void addData(List target, String name, Object data) {
 		if (data != null) {
@@ -107,6 +131,9 @@ public class StartLocating extends Activity {
 
 		// Wifi
 		addData(result, "wifi", getWifi());
+
+        // Linear Accelerometer
+        //addData(result, "acc", getAcc());
 
 		Log.d(C.TAG, "Data extraction complete in " + (System.currentTimeMillis() - start) + " ms");
 		return result;
@@ -126,6 +153,12 @@ public class StartLocating extends Activity {
 
 		return jsonScanResults;
 	}
+
+    protected List getAcc() {
+        List jsonScanResults = new LinkedList(accSensorReadings);
+        accSensorReadings.clear();
+        return jsonScanResults;
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
