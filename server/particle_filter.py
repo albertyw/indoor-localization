@@ -17,7 +17,7 @@ class ParticleFilter:
             particle['heading'] = uniform(0, 360)
 
     def observe(self, observations):
-        # consume observation
+        # observation is a list of all the data received from the app
         for observation in observations:
             name = observation['name']
             data = observation['data']
