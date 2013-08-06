@@ -9,14 +9,17 @@
     tools:context=".StartLocating" >
 
     <TextView
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
 
-    <Button android:id="@+id/StartLoc"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentBottom="true"
-	    android:text="hi" />
+    <Button
+        android:id="@+id/ping_server"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_centerVertical="true"
+        android:text="ping server" />
 
 </RelativeLayout>
