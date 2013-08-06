@@ -9,9 +9,11 @@ BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 class Datastore:
     STORAGE = BASE_DIR + 'storage.txt'
     def __init__(self):
+        self.load()
+
+    def load(self):
         handle = open(STORAGE, 'r')
-        self.data = handle.read()
-        self.data = json.loads(self.data)
+        self.data = json.loads(handle.read())
         handle.close()
 
     def save(self):
