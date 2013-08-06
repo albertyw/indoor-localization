@@ -3,10 +3,13 @@ from random import uniform
 class ParticleFilter:
     
     num_particles = 10000
-    particles = [{}] * num_particles
     grid_dim = (200, 200)
 
-    def __init__(self):
+    def __init__(self, particles=None):
+        if particles:
+            self.particles = particles
+            return
+        self.particles = [{}] * self.num_particles
         for particle in self.particles:
             particle['weight'] = 1.0/self.num_particles
             particle['position'] = (uniform(0, self.grid_dim[0]),
@@ -47,7 +50,5 @@ class ParticleFilter:
             particle['weight'] = 1.0/self.num_particles
         self.particles = new_particles
         
-    def actuate(self, action):
-        # consume action
-        pass
-
+    def getParticles(self):
+        return self.particles
