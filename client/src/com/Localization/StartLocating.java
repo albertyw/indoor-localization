@@ -1,10 +1,15 @@
 package com.Localization;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
@@ -15,13 +20,16 @@ import android.widget.Button;
 
 import org.json.simple.JSONValue;
 
+// See http://www.androidsnippets.com/scan-for-wireless-networks
+
 public class StartLocating extends Activity {
+    WifiManager mainWifi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_locating);
-        
+        mainWifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         Button b = (Button)findViewById(R.id.ping_server);
         ErrorReporting.initialize(this);
         
@@ -29,21 +37,28 @@ public class StartLocating extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				// BEGIN ugly Java JSON example
-				List data = new LinkedList();
-		        Map wifi = new HashMap();
-		        wifi.put("name","wifi");
-		        wifi.put("data", "this_is_what_i_have");
-		        data.add(wifi);
-		        
+                List data = scan();
 		        String jsonStringified = JSONValue.toJSONString(data);
-		        // END ugly Java JSON example
 		        
 		        Log.d(C.TAG, "JSON encoded data: " + jsonStringified);
 				Networking.postData(C.SERVER + "push", jsonStringified);
 			}
 		});
         
+    }
+
+    protected List scan() {
+        mainWifi.startScan();
+        List<ScanResult> wifiList = mainWifi.getScanResults();
+        List<HashMap> data = new LinkedList<HashMap>();
+        for(int i = 0; i < wifiList.size(); i++){
+            HashMap datum = new HashMap();
+            datum.put("bssid", wifiList.get(i).BSSID);
+            datum.put("level", wifiList.get(i).level);
+            datum.put("timestamp",  wifiList.get(i).timestamp);
+            data.add(datum);
+        }
+        return data;
     }
 
 
