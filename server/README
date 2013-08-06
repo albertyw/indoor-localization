@@ -1,0 +1,28 @@
+Virtualenv is required for this project.
+It ensures we are all using mutully compatible versions of packages.
+
+Update your virtual env:
+
+        ./make_env.sh
+
+Activate env:
+
+        . _env/bin/activate
+
+Deactivate env (anywhere inside active env):
+
+        deactivate
+
+To install package issue (inside active environment):
+
+        pip install <package>
+
+(THIS WON'T PROPAGATE YOUR CHANGES TO OTHERS).
+
+To propagate this to others do
+
+        pip freeze > requirements.txt
+        git add requirements.txt
+
+Commit, push and ask your friends to rerun ./make_env
+
