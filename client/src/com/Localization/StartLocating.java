@@ -19,5 +19,5 @@ public class StartLocating extends Activity {
         getMenuInflater().inflate(R.menu.start_locating, menu);
         return true;
     }
-    
+
 }
