@@ -7,7 +7,7 @@ import json
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 class Datastore:
-    STORAGE = BASE_DIR + 'storage.txt'
+    STORAGE = os.path.join(BASE_DIR, 'storage.txt')
     def __init__(self):
         self.data = []
         #self.load()
@@ -18,7 +18,7 @@ class Datastore:
     #    handle.close()
 
     def save(self):
-        handle = open(STORAGE, 'r')
+        handle = open(self.STORAGE, 'w')
         handle.write(json.dumps(self.data))
         handle.close()
 

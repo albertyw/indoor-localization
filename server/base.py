@@ -17,15 +17,20 @@ PARTICLE_FILTER = ParticleFilter()
 def hello():
     return "Localisation 2.0"
 
-@app.route("/data/", methods=['GET','POST'])
+@app.route("/push", methods=['GET','POST'])
 def data():
     if 'data' not in request.form:
         return 'Nothing received'
+    print request.form['data']
     data = json.loads(request.form['data'])
+    # to show that json works - just an example
+    print "JSON WORKS:", data[0]['name']
+
     d = Datastore()
     d.add(data)
     d.save()
-    PARTICLE_FILTER.observe(d.data)
+    # whoah, it's not ready yet.
+    # PARTICLE_FILTER.observe(d.data)
     return 'Saved '+str(data)
 
 
