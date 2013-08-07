@@ -1,24 +1,10 @@
 <!DOCTYPE html>
 <html>
-    <head></head>
-    <body>
-        <canvas id="map" width="5800" height="780"></canvas>
+    <head>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script>
-            var canvas = document.getElementById('map');
-            var context = canvas.getContext('2d');
-            var imageObj = new Image();
-
-            imageObj.onload = function() {
-                context.drawImage(imageObj, 0, 0, 5800, 780);
-                //context.fillStyle='#FF0000';
-                //context.fillRect(100,100,5,5);
-            };
-            imageObj.src = 'static/dropbox_map.png';
-
-
+            var canvas, context;
             function draw_point(context, x, y) {
-                console.log(x,y);
                 context.fillStyle='#FF0000';
                 context.fillRect(x,y,5,5);
             }
@@ -26,7 +12,7 @@
                 $.get(
                     '/sample_particles',
                     function(data){
-                        //context.clear();
+                        context.clearRect(0,0,5800,780);
                         $.each(data, function(index, value){
                             draw_point(context, value[0], value[1]);
                         });
@@ -36,10 +22,14 @@
             }
 
             $(function() {
-                setInterval(ajax_request, 300);
+                canvas = $("#map")[0];
+                context = canvas.getContext('2d');
+                console.log("Hi, I am Javascript, and I am retarded! Nice to meet you!");
+                setInterval(ajax_request, 500);
             });
-
         </script>
+    </head>
+    <body style="background-image:url('static/dropbox_map.bmp')">
+        <canvas id="map" width="5800" height="780"></canvas>
     </body>
-<!-- <img src="dropbox_map.png" alt="Map of Dropbox"> -->
 </html>
