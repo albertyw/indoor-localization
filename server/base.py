@@ -8,6 +8,7 @@ app = Flask(__name__)
 
 from datastore import Datastore
 from particle_filter import ParticleFilter
+from wifi_magic import WifiMagic
 
 PARTICLE_FILTER = ParticleFilter()
 
@@ -23,8 +24,12 @@ def data():
         return 'Nothing received'
     print request.form['data']
     data = json.loads(request.form['data'])
-    # to show that json works - just an example
-    print "JSON WORKS:", data[0]['name']
+
+    wifi_magic = WifiMagic()
+
+    for d in data:
+        if d['name'] == 'wifi':
+            result = wifi.parse(data)    
 
     d = Datastore()
     d.add(data)
