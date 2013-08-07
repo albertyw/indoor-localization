@@ -4,7 +4,7 @@ Flask server to accept data from android phones
 
 import json
 from flask import Flask, request
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', static_url_path='/static')
 
 from datastore import Datastore
 from particle_filter import ParticleFilter
@@ -15,7 +15,10 @@ from random import sample
 
 @app.route("/")
 def hello():
-    return "Localisation 2.0"
+    handle = open('static/marauders_map.html','r')
+    html = handle.read()
+    handle.close()
+    return html
 
 @app.route("/push", methods=['GET','POST'])
 def data():
