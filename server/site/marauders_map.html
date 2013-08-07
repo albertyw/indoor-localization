@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <canvas id="map" width="3000" height="400"></canvas>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script>
+            var canvas = document.getElementById('map');
+            var context = canvas.getContext('2d');
+            var imageObj = new Image();
+            var server = '192.168.3.6:80';
+
+            imageObj.onload = function() {
+                context.drawImage(imageObj, 0, 0, 3000, 400);
+                //context.fillStyle='#FF0000';
+                //context.fillRect(100,100,5,5);
+            };
+            imageObj.src = 'dropbox_map.png';
+
+            /*var i = 0;
+            while(i < 1000) {
+                setTimeout(draw_point.bind(this, context,110+i,100), 1000 + 100*i);
+                i += 10;
+            }*/
+                    
+            function draw_point(context, x, y) {
+                console.log(context,x,y);
+                context.fillStyle='#FF0000'
+                context.fillRect(x,y,5,5);
+            }
+            $(function() {
+            $.post(
+                server+'/sample_particles',
+                function(data){
+                    console.log(data);
+                    $.each(data, function(index, value){
+                        console.log(index);
+                        draw_point(context, value[0], value[1]);
+                    });
+                },
+                'json'
+            );
+            });
+        </script>    
+    </body>
+<!-- <img src="dropbox_map.png" alt="Map of Dropbox"> -->
+</html>
