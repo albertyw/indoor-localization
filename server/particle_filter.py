@@ -1,45 +1,23 @@
 from random import uniform
+import math
 
 class ParticleFilter:
-    
-    num_particles = 10000
-    grid_dim = (200, 200)
+    num_particles = 10
+    grid_dim = (5800, 780)
 
     def __init__(self, particles=None):
         if particles:
             self.particles = particles
-            return
-        self.particles = [{}] * self.num_particles
-        for particle in self.particles:
-            particle['weight'] = 1.0/self.num_particles
-            particle['position'] = (uniform(0, self.grid_dim[0]),
+        else:
+            self.particles = []
+            for i in range(self.num_particles):
+                particle = {}
+                particle['weight'] = 1.0/self.num_particles
+                particle['position'] = (uniform(0, self.grid_dim[0]),
                                     uniform(0, self.grid_dim[1]))
-            particle['heading'] = uniform(0, 360)
+                particle['heading'] = uniform(0, 360)
+                self.particles.append(particle)
 
-    def observe(self, observations):
-        # observation is a list of all the data received from the app
-        for observation in observations:
-            name = observation['name']
-            data = observation['data']
-            if name == 'wifi':
-                self.consumeWifi(data)
-            elif name == 'heading':
-                self.consumeHeading(data)
-            elif name == 'steps':
-                self.consumeSteps(data)
-            else:
-                raise Exception('Not valid observation name!')
-        self.normalize()
-        self.resample()
-
-    def consumeWifi(self, data):
-        pass
-
-    def consumeHeading(self, data):
-        pass
-    
-    def consumeSteps(self, data):
-        pass
 
     def normalize(self):
         sum = 0.0
@@ -49,17 +27,21 @@ class ParticleFilter:
             particle['weight'] /= sum
 
     def resample(self):
+        self.normalize();
         prefix_sums = [0.0] * self.num_particles
         for i in range(self.num_particles-1):
             prefix_sums[i+1] = prefix_sums[i] + self.particles[i]['weight']
         sum_choices = [ uniform(0.0, 1.0) for i in range(self.num_particles)]
+        sum_choices.sort()
+
+
         pointer_particles = 0
         pointer_random = 0
         new_particles = []
         while pointer_random < self.num_particles or pointer_particles<self.num_particles:
             if pointer_particles >= self.num_particles or \
                      (pointer_random < self.num_particles and \
-                     self.particles[pointer_particles]['weight'] > \
+                     prefix_sums[pointer_particles] > \
                      sum_choices[pointer_random]):
                 new_particles.append(dict(self.particles[pointer_particles-1]))
                 pointer_random += 1
@@ -68,6 +50,34 @@ class ParticleFilter:
         for particle in new_particles:
             particle['weight'] = 1.0/self.num_particles
         self.particles = new_particles
-        
-    def getParticles(self):
+
+    def get_particles(self):
         return self.particles
+
+    def set_particles(self, particles):
+        self.particles = particles
+
+    def get_position(self):
+        sumx, sumy = 0.0, 0.0
+        for particle in self.particles:
+            sumx += particle['position'][0]
+            sumy += particle['position'][1]
+        sumx /= self.num_particles
+        sumy /= self.num_particles
+        return (sumx,sumy)
+
+    def get_std(self):
+        stdx, stdy = 0.0, 0.0
+        meanx, meany = self.get_position()
+
+        for particles in self.particles:
+            stdx += (particles['position'][0] - meanx) ** 2
+            stdy += (particles['position'][1] - meany) ** 2
+        stdx /= (self.num_particles -1)
+        stdy /= (self.num_particles -1)
+        stdx = math.sqrt(stdx)
+        stdy = math.sqrt(stdy)
+        return (stdx, stdy)
+
+
+

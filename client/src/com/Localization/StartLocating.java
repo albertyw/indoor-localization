@@ -130,11 +130,12 @@ public class StartLocating extends Activity {
 
 		List result = new LinkedList();
 
+		
+        // Linear Accelerometer
+        addData(result, "sensors", getAcc());
+		
 		// Wifi
 		addData(result, "wifi", wifiMagic.getWifi());
-
-        // Linear Accelerometer
-        addData(result, "acc", getAcc());
 
 		Log.d(C.TAG, "Data extraction complete in " + (System.currentTimeMillis() - start) + " ms");
 		return result;
