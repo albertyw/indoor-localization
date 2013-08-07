@@ -10,7 +10,7 @@ from datastore import Datastore
 from particle_filter import ParticleFilter
 from wifi_magic import WifiMagic
 from sensors_magic import SensorsMagic
-
+from random import sample
 ### Server Pages ###
 
 @app.route("/")
@@ -51,6 +51,15 @@ def get():
     saved_particles = d.load()
     pf = ParticleFilter(particles=saved_particles)
     return 'mean: '+ str(pf.get_position()) + ', std: ' +str(pf.get_std())
+
+@app.route("/sample_particles")
+def sample_particles():
+#    d = Datastore()
+#    saved_particles = d.load()
+#    samples = [particle['position'] for particle in sample(saved_particles, 50)]
+#    print json.dumps(samples)
+#    return json.dumps(samples)
+    return json.dumps([(50, 50), (100, 170), (0, 500), (500, 0)])
 
 if __name__ == "__main__":
     app.debug = True
