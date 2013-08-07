@@ -36,6 +36,8 @@ public class StartLocating extends Activity {
 	boolean dataPushHandlerActive;
 	Button btnStartPushing;
 	Button btnStopPushing;
+	
+	WifiMagic wifiMagic;
 
 	Runnable statusChecker = new Runnable() {
 		@Override 
@@ -92,8 +94,9 @@ public class StartLocating extends Activity {
 			}
 		});
 
+		wifiMagic = new WifiMagic(this);
+		
         // Sensors
-        mainWifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         accSensorReadings = new LinkedList();
@@ -128,7 +131,7 @@ public class StartLocating extends Activity {
 		List result = new LinkedList();
 
 		// Wifi
-		addData(result, "wifi", getWifi());
+		addData(result, "wifi", wifiMagic.getWifi());
 
         // Linear Accelerometer
         addData(result, "acc", getAcc());
@@ -137,20 +140,7 @@ public class StartLocating extends Activity {
 		return result;
 	}
 
-	protected List getWifi() {
-		mainWifi.startScan();
-		List jsonScanResults = new LinkedList();
-
-		for(ScanResult scanResult : mainWifi.getScanResults()) {
-			HashMap jsonScanResult = new HashMap();
-			jsonScanResult.put("bssid", scanResult.BSSID);
-			jsonScanResult.put("level", scanResult.level);
-			jsonScanResult.put("frequency", scanResult.frequency);
-			jsonScanResults.add(jsonScanResult);
-		}
-
-		return jsonScanResults;
-	}
+	
 
     protected List getAcc() {
         List jsonScanResults = new LinkedList(accSensorReadings);
