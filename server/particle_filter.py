@@ -1,5 +1,8 @@
 from random import uniform
 
+PIXELS_PER_METER = 22.0
+PIXELS_PER_METER_SQ = PIXELS_PER_METER**2
+
 class ParticleFilter:
     
     num_particles = 10000
@@ -31,6 +34,19 @@ class ParticleFilter:
                 raise Exception('Not valid observation name!')
         self.normalize()
         self.resample()
+
+    def distance_observation_probability(router_distances, xy):
+        ll = 0
+        x, y = xy
+
+        for (x1, y1), distance in router_distances:
+            dist = math.sqrt((x - x1)**2/PIXELS_PER_METER_SQ + (y - y1)**2 / PIXELS_PER_METER_SQ)
+            ll += max(LOG_MIN_PROB, loglikelihood((distance - dist) / max(MIN_DISTANCE_STD, distance**2/25.0)))
+        return ll
+
+    NORM_Z = log(0.39894)
+    def loglikelihood(x):
+        return NORM_Z - 0.5*x*x
 
     def consumeWifi(self, data):
         pass
