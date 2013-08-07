@@ -15,11 +15,21 @@
         android:text="@string/hello_world" />
 
     <Button
-        android:id="@+id/ping_server"
+        android:id="@+id/start_push"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="125dp"
+        android:text="Start Pushing" />
+
+    <Button
+        android:id="@+id/stop_pushing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/start_push"
+        android:layout_alignRight="@+id/start_push"
         android:layout_centerVertical="true"
-        android:text="ping server" />
+        android:text="Stop Pushing" />
 
 </RelativeLayout>
