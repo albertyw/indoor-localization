@@ -37,8 +37,8 @@ public class StartLocating extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-                List data = scan();
-                String jsonStringified = JSONValue.toJSONString(data);
+				List locationData = getAvailableData();
+                String jsonStringified = JSONValue.toJSONString(locationData);
 		        
 		        Log.d(C.TAG, "JSON encoded data: " + jsonStringified);
 				Networking.postData(C.SERVER + "push", jsonStringified);
@@ -46,19 +46,41 @@ public class StartLocating extends Activity {
 		});
         
     }
+    // Adds data to target if data is not null and denotes it as name
+    private void addData(List target, String name, Object data) {
+    	if (data != null) {
+    		Map dataContainer = new HashMap();
+    		dataContainer.put("name", name);
+    		dataContainer.put("data", data);
+    		target.add(dataContainer);
+    	}
+    }
+    
+    protected List getAvailableData() {
+    	Long start = System.currentTimeMillis();
+    	
+    	List result = new LinkedList();
+    	
+    	// Wifi
+    	addData(result, "wifi", getWifi());
+    	
+    	Log.d(C.TAG, "Data extraction complete in " + (System.currentTimeMillis() - start) + " ms");
+    	return result;
+    }
 
-    protected List scan() {
-        mainWifi.startScan();
-        List<ScanResult> wifiList = mainWifi.getScanResults();
-        List<HashMap> data = new LinkedList<HashMap>();
-        for(int i = 0; i < wifiList.size(); i++){
-            HashMap datum = new HashMap();
-            datum.put("name", wifiList.get(i).BSSID);
-            datum.put("bssid", wifiList.get(i).BSSID);
-            datum.put("level", wifiList.get(i).level);
-            data.add(datum);
+    protected List getWifi() {
+    	mainWifi.startScan();
+    	List jsonScanResults = new LinkedList();
+        
+        for(ScanResult scanResult : mainWifi.getScanResults()) {
+            HashMap jsonScanResult = new HashMap();
+            jsonScanResult.put("bssid", scanResult.BSSID);
+            jsonScanResult.put("level", scanResult.level);
+            jsonScanResult.put("frequency", scanResult.frequency);
+            jsonScanResults.add(jsonScanResult);
         }
-        return data;
+        
+        return jsonScanResults;
     }
 
     @Override
