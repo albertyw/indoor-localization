@@ -128,7 +128,7 @@ public class StartLocating extends Activity {
 		List result = new LinkedList();
 
 		// Wifi
-		//addData(result, "wifi", getWifi());
+		addData(result, "wifi", getWifi());
 
         // Linear Accelerometer
         addData(result, "acc", getAcc());
