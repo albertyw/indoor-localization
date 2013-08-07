@@ -57,12 +57,12 @@ def get():
 
 @app.route("/sample_particles")
 def sample_particles():
-#    d = Datastore()
-#    saved_particles = d.load()
-#    samples = [particle['position'] for particle in sample(saved_particles, 50)]
-#    print json.dumps(samples)
-#    return json.dumps(samples)
-    return json.dumps([(50, 50), (100, 170), (0, 500), (500, 0)])
+    d = Datastore()
+    saved_particles = d.load()
+    samples = [particle['position'] for particle in sample(saved_particles, 50)]
+    #print json.dumps(samples)
+    return json.dumps(samples)
+    #return json.dumps([(50, 50), (100, 170), (0, 500), (500, 0)])
 
 if __name__ == "__main__":
     app.debug = True
