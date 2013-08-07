@@ -39,7 +39,7 @@ def data():
             result = wifi_magic.parse(d['data'])
             result = wifi_magic.update_particles(pf.get_particles(), result)
 
-    pf.resample();
+    #pf.resample();
     datastore.save(pf.get_particles())
 
     return 'Saved..'

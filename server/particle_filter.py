@@ -3,7 +3,7 @@ import math
 
 class ParticleFilter:
     num_particles = 10
-    grid_dim = (5800, 780)
+    grid_dim = (5800.0, 780.0)
 
     def __init__(self, particles=None):
         if particles:
@@ -13,9 +13,9 @@ class ParticleFilter:
             for i in range(self.num_particles):
                 particle = {}
                 particle['weight'] = 1.0/self.num_particles
-                particle['position'] = (uniform(0, self.grid_dim[0]),
-                                    uniform(0, self.grid_dim[1]))
-                particle['heading'] = uniform(0, 360)
+                particle['position'] = (uniform(0.0, self.grid_dim[0]),
+                                    uniform(0.0, self.grid_dim[1]))
+                particle['heading'] = uniform(0.0, 360.0)
                 self.particles.append(particle)
 
 
