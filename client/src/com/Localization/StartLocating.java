@@ -94,24 +94,22 @@ public class StartLocating extends Activity {
 
         // Sensors
         mainWifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        /*
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         accSensorReadings = new LinkedList();
         sensorManager.registerListener(new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
+                if(!dataPushHandlerActive) return;
                 HashMap reading = new HashMap();
                 reading.put("x", event.values[0]);
                 reading.put("y", event.values[1]);
                 reading.put("z", event.values[2]);
-                Log.d(C.TAG, "x"+Float.toString(event.values[0]));
-                //accSensorReadings.add(reading);
+                accSensorReadings.add(reading);
             }
             @Override
             public void onAccuracyChanged(Sensor sensor, int accuracy){}
         }, accSensor, SensorManager.SENSOR_DELAY_FASTEST);
-        */
     }
 
 	// Adds data to target if data is not null and denotes it as name
@@ -130,10 +128,10 @@ public class StartLocating extends Activity {
 		List result = new LinkedList();
 
 		// Wifi
-		addData(result, "wifi", getWifi());
+		//addData(result, "wifi", getWifi());
 
         // Linear Accelerometer
-        //addData(result, "acc", getAcc());
+        addData(result, "acc", getAcc());
 
 		Log.d(C.TAG, "Data extraction complete in " + (System.currentTimeMillis() - start) + " ms");
 		return result;
