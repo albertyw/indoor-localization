@@ -29,7 +29,7 @@ def data():
 
     for d in data:
         if d['name'] == 'wifi':
-            result = wifi.parse(data)    
+            result = wifi_magic.parse(data)
 
     d = Datastore()
     d.add(data)
