@@ -32,7 +32,7 @@ public class StartLocating extends Activity {
 
 	WifiManager mainWifi;
 
-	Handler dataPushHandler;
+	static Handler dataPushHandler;
 	boolean dataPushHandlerActive;
 	Button btnStartPushing;
 	Button btnStopPushing;

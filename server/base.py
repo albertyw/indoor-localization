@@ -10,6 +10,7 @@ app = Flask(__name__, static_folder='static', static_url_path='/static')
 from datastore import Datastore
 from particle_filter import ParticleFilter
 from wifi_magic import WifiMagic
+from wifi_deeper_magic import WifiDeeperMagic
 from sensors_magic import SensorsMagic
 from random import sample, random
 from werkzeug.contrib.cache import SimpleCache
@@ -68,6 +69,8 @@ def data():
 
 @app.route("/get")
 def get():
+    wdm = WifiDeeperMagic(cache)
+    print wdm.get_corrections()
     saved_particles = get_db("particles")
     pf = ParticleFilter(particles=saved_particles)
     return 'mean: '+ str(pf.get_position()) + ', std: ' +str(pf.get_std())
