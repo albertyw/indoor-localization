@@ -21,7 +21,7 @@ class SimpleProfiler:
             return end_time - start_time
 
     def print_result(self,name,value):
-        print name,'completed in',value*1000.0
+        print name,'completed in',value*1000.0,'ms'
 
     def pstop(self,name):
         if not self.off:
