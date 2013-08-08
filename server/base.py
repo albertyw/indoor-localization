@@ -29,6 +29,11 @@ def hello():
     handle.close()
     return html
 
+@app.route("/reset", methods =['GET', 'POST'])
+def reset():
+    cache.delete('particles')
+    return "sure"
+
 @app.route("/push", methods=['GET','POST'])
 def data():
     p.start("entire_push")

@@ -49,4 +49,13 @@
         android:layout_toRightOf="@+id/extractor_text"
         android:text="WCE" />
 
+    <Button
+        android:id="@+id/reset_particles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/stop_pushing"
+        android:layout_alignRight="@+id/stop_pushing"
+        android:layout_below="@+id/stop_pushing"
+        android:text="Reset Particles" />
+
 </RelativeLayout>

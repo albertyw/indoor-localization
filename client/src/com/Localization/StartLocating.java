@@ -114,13 +114,22 @@ public class StartLocating extends Activity {
 		btnStartPushing.setEnabled(true);
 		Button btnDwa = (Button)findViewById(R.id.dwabtn);
 		Button btnWce = (Button)findViewById(R.id.wce);
-		
+		Button resetParticles = (Button)findViewById(R.id.reset_particles);
 		btnDwa.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View arg0) {
 				startActivity(new Intent(self, WifiAnalyzer.class));
 
+				
+			}
+		});
+		
+		resetParticles.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Networking.postData(C.SERVER+"reset", "hi");
 				
 			}
 		});
