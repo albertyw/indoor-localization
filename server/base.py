@@ -85,7 +85,7 @@ def set_db(name, data):
 @app.route("/router_info")
 def send_router_info():
     routers = WifiMagic.ROUTER_POS
-    return json.dump(routers)
+    return json.dumps(routers)
 
 if __name__ == "__main__":
     app.debug = True
