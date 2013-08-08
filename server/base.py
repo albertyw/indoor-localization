@@ -54,20 +54,10 @@ def data():
 
     wifi_magic = WifiMagic()
     wifi_deep_magic = WifiDeeperMagic(cache)
-
-    p.start('sensors_and_walls')    
-    walls = None
     
-    p.start('walls_cache')
-    if SensorsMagic.USE_WALLS:
-        walls = get_db('walls')
-    p.pstop('walls_cache')
     p.start('sensors')
     sensors_magic = SensorsMagic(walls)
     p.pstop('sensors')
-
-    p.pstop('sensors_and_walls')
-
 
     p.start('load_particles')
     saved_particles = get_db("particles")
@@ -99,8 +89,11 @@ def data():
     p.start('save_to_cache')
     set_db("particles", pf.get_particles())
     p.pstop('save_to_cache')
-    #print "Particles updated to", pf.get_position(), " (var:", pf.get_std(),")"
+    #x, y = pf.get_position()
+    #std = pf.get_std()
+    #print "Particles updated to", x, y, " (var:", std,")"
     p.pstop('entire_push')
+    #return json.dumps([x, y, std])
     return 'Thank you!'
 
 @app.route("/get")
@@ -167,7 +160,7 @@ def get_router_dist():
 
 if __name__ == "__main__":
     app.debug = True
-    if SensorsMagic.USE_WALLS:
-        with open('walls/walls.p', 'r') as pickled_set:
-            set_db('walls', pickle.load(pickled_set))
+    file_handle = open('walls/walls.p', 'r')
+    walls = pickle.load(file_handle)
+    file_handle.close()
     app.run(host='0.0.0.0', port=80)
