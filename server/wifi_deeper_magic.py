@@ -10,7 +10,7 @@ class WifiDeeperMagic: # aka router signal correction
     BASE_DIR = dirname(realpath(__file__))
     WIFI_FOLDER_PATH = join(BASE_DIR, WIFI_FOLDER_NAME)
 
-    ASSUMED_BASE_LEVEL = -48.0
+    ASSUMED_BASE_LEVEL = -50.0
 
     CACHED_NAME = "base_levels"
 

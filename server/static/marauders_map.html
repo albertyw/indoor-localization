@@ -35,7 +35,7 @@
                 );
             }
 
-            function update_system_state() {
+            function update_system_state(callback) {
                 $.get(
                     '/get_system_state',
                     function(data){
@@ -53,9 +53,16 @@
 	                $.each(router_distances, function(key, value){
                             draw_circle(value[0][0], value[0][1], value[1]);
                         });
+                        callback()
                     },
                     'json'
                 );
+            }
+
+            function start_updating() {
+                update_system_state(function() {
+                    setTimeout(start_updating, 300);
+                });
             }
 
             $(function() {
@@ -63,7 +70,7 @@
                 context = canvas.getContext('2d');
                 console.log("Hi, I am Javascript, and I am retarded! Nice to meet you!");
                 get_routerinfo();
-                setInterval(update_system_state, 500);
+                start_updating()
             });
         </script>
     </head>

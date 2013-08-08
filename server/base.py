@@ -16,7 +16,9 @@ from wifi_deeper_magic import WifiDeeperMagic
 from sensors_magic import SensorsMagic
 from random import sample, random
 from werkzeug.contrib.cache import SimpleCache
+from simple_profiler import SimpleProfiler
 cache = SimpleCache()
+p = SimpleProfiler()
 
 ### Server Pages ###
 
@@ -29,6 +31,7 @@ def hello():
 
 @app.route("/push", methods=['GET','POST'])
 def data():
+    p.start("entire_push")
     if 'data' not in request.form:
         return 'Nothing received'
         #Test code:
@@ -40,20 +43,34 @@ def data():
 #                             'level' : -56,
 #                             'freqMhz' : 2600,
 #                             'estimatedDistance' : 10}]}])}
+    #p.off()
+    p.start('initial')
     data = json.loads(request.form['data'])
 
     wifi_magic = WifiMagic()
-
-    walls = get_db('walls')
-
-    sensors_magic = SensorsMagic(walls)
     wifi_deep_magic = WifiDeeperMagic(cache)
 
+    p.start('sensors_and_walls')    
+    walls = None
+    
+    p.start('walls_cache')
+    if SensorsMagic.USE_WALLS:
+        walls = get_db('walls')
+    p.pstop('walls_cache')
+    p.start('sensors')
+    sensors_magic = SensorsMagic(walls)
+    p.pstop('sensors')
 
+    p.pstop('sensors_and_walls')
+
+
+    p.start('load_particles')
     saved_particles = get_db("particles")
+    p.pstop('load_particles')
     pf = ParticleFilter(particles=saved_particles)
+    p.pstop('initial')
 
-
+    p.start('weights')
     for d in data:
         if d['name'] == 'sensors':
             result = sensors_magic.parse(d['data'])
@@ -65,15 +82,21 @@ def data():
                 if r['label'] in corr:
                     oldLvl = r['level']
                     r['level']+=corr[r['label']]
-                    print "corrected",r['label'],'from',oldLvl,'to',r['level']
+                    #print "corrected",r['label'],'from',oldLvl,'to',r['level']
             result = wifi_magic.parse(wifidata)
             set_db("router_dist", result)
-            result = wifi_magic.update_particles(pf.get_particles(), result)    
-    
+            result = wifi_magic.update_particles(pf.get_particles(), result)
+    p.pstop('weights')
+
+    p.start('resample')
     pf.resample();
+    p.pstop('resample')
+    p.start('save_to_cache')
     set_db("particles", pf.get_particles())
-    print "Particles updated to", pf.get_position(), " (var:", pf.get_std(),")"
-    return 'Saved..'
+    p.pstop('save_to_cache')
+    #print "Particles updated to", pf.get_position(), " (var:", pf.get_std(),")"
+    p.pstop('entire_push')
+    return 'Thank you!'
 
 @app.route("/get")
 def get():
@@ -83,10 +106,13 @@ def get():
 
 @app.route("/get_system_state")
 def get_system_state():
-    return json.dumps({
+    p.start('system_state_generation')
+    result = json.dumps({
                         'particles' : sample_particles(),
                         'router_distances' : get_router_dist()
                       })
+    p.pstop('system_state_generation')
+    return result
 
 @app.route("/update_base_level", methods=['GET','POST'])
 def update_base_level():

@@ -11,7 +11,7 @@ class SensorsMagic:
     head = 20.0
     varhead = 20.0
     
-    USE_WALLS = True
+    USE_WALLS = False
 
     TICKS = 3
 
