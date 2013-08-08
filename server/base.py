@@ -43,11 +43,11 @@ def data():
             sensors_magic.update_particles(pf.get_particles(), result)
         if d['name'] == 'wifi':
             result = wifi_magic.parse(d['data'])
+            set_db("router_dist", result)
             result = wifi_magic.update_particles(pf.get_particles(), result)
 
     pf.resample();
     set_db("particles", pf.get_particles())
-
     print "Particles updated to", pf.get_position(), " (var:", pf.get_std(),")"
     return 'Saved..'
 
@@ -86,6 +86,13 @@ def set_db(name, data):
 def send_router_info():
     routers = WifiMagic.ROUTER_POS
     return json.dumps(routers)
+
+@app.route("/router_dist")
+def send_router_dist():
+    dists = get_db('router_dist')
+    if dists:
+        return json.dumps(dists)
+    return json.dumps([])
 
 if __name__ == "__main__":
     app.debug = True

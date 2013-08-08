@@ -2,9 +2,11 @@
 <html>
     <head>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
         <script>
             var canvas, context;
             var routerLocArray = [];
+	    var routerDistArray = [];
 
             function draw_point(x, y, color) {
                 context.fillStyle=color;
@@ -14,11 +16,29 @@
                 context.fillStyle=color;
                 context.fillText(text,x,y);
             }
+	    
+	    function draw_circle(x, y, radius) {
+	        context.arc(x, y, radius, 0, 2 * Math.PI, false);
+	        context.lineWidth = 1;
+                context.strokeStyle = "blue";
+                context.stroke();
+	    }
+
             function ajax_router_request() {
                 $.get(
                     '/router_info',
                     function(data){
                         routerLocArray = data;
+                    },
+                    'json'
+                );
+            }
+
+	    function ajax_router_request() {
+                $.get(
+                    '/router_dist',
+                    function(data){
+                        routerDistArray = data;
                     },
                     'json'
                 );
@@ -35,6 +55,9 @@
                         $.each(routerLocArray, function(key, value){
                             draw_point(value[0], value[1], '#0000FF');
                             draw_name(key, value[0], value[1], '#0000FF');
+                        });
+	                $.each(routerDistArray, function(key, value){
+                            draw_circle(value[0][0], value[0][1], value[1]);
                         });
                     },
                     'json'
