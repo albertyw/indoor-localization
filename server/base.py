@@ -46,10 +46,6 @@ def data():
 
     walls = get_db('walls')
 
-    if SensorsMagic.USE_WALLS and  not walls:
-        with open('walls/walls.p', 'r') as pickled_set:
-            walls = pickle.load(pickled_set)
-        set_db('walls', walls)
     sensors_magic = SensorsMagic(walls)
     wifi_deep_magic = WifiDeeperMagic(cache)
 
@@ -72,8 +68,7 @@ def data():
                     print "corrected",r['label'],'from',oldLvl,'to',r['level']
             result = wifi_magic.parse(wifidata)
             set_db("router_dist", result)
-            result = wifi_magic.update_particles(pf.get_particles(), result)
-    
+            result = wifi_magic.update_particles(pf.get_particles(), result)    
     
     pf.resample();
     set_db("particles", pf.get_particles())
@@ -141,4 +136,7 @@ def get_router_dist():
 
 if __name__ == "__main__":
     app.debug = True
+    if SensorsMagic.USE_WALLS:
+        with open('walls/walls.p', 'r') as pickled_set:
+            set_db('walls', pickle.load(pickled_set))
     app.run(host='0.0.0.0', port=80)
