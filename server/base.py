@@ -34,7 +34,7 @@ def data():
 
     sensors_magic = SensorsMagic()
 
-    saved_particles = get_db()
+    saved_particles = get_db("particles")
     pf = ParticleFilter(particles=saved_particles)
 
     for d in data:
@@ -46,20 +46,20 @@ def data():
             result = wifi_magic.update_particles(pf.get_particles(), result)
 
     pf.resample();
-    db_save(pf.get_particles())
+    set_db("particles", pf.get_particles())
 
     print "Particles updated to", pf.get_position(), " (var:", pf.get_std(),")"
     return 'Saved..'
 
 @app.route("/get")
 def get():
-    saved_particles = get_db()
+    saved_particles = get_db("particles")
     pf = ParticleFilter(particles=saved_particles)
     return 'mean: '+ str(pf.get_position()) + ', std: ' +str(pf.get_std())
 
 @app.route("/sample_particles")
 def sample_particles():
-    saved_particles = get_db()
+    saved_particles = get_db("particles")
     if saved_particles:
         samples = [particle['position'] for particle in sample(saved_particles, 50)]
     else:
@@ -68,7 +68,7 @@ def sample_particles():
 
 @app.route("/check_persistance")
 def check_persistance():
-    old_shit = get_db()
+    old_shit = get_db("particles")
     print 'old particles:'
     print old_shit
     rand_shit = random()
@@ -76,11 +76,11 @@ def check_persistance():
     save_db(rand_shit)
     return json.dumps((old_shit, rand_shit))
 
-def get_db():
-    return cache.get('db')
+def get_db(name):
+    return cache.get(name)
 
-def save_db(data):
-    cache.set('db', data)
+def set_db(name, data):
+    cache.set(name, data)
     
 if __name__ == "__main__":
     app.debug = True

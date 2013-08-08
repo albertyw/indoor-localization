@@ -6,8 +6,8 @@ class SensorsMagic:
     grid_dim = (5800.0, 780.0)
     PIXELS_PER_METER = 22.6
 
-    dist = 0.2
-    vardist = 0.2
+    dist = 0.4
+    vardist = 0.3
     head = 20.0
     varhead = 20.0
     def parse(self, data):
