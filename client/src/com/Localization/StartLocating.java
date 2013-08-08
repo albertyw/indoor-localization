@@ -14,6 +14,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.provider.ContactsContract.Contacts.Data;
 import android.app.Activity;
 import android.util.Log;
@@ -21,6 +22,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 import org.json.simple.JSONValue;
 
@@ -51,7 +53,8 @@ public class StartLocating extends Activity {
 			} else if (debug_level == 2){
 				Log.d(C.TAG, "JSON encoded data: " + jsonStringified);
 			}
-				Networking.postData(C.SERVER + "push", jsonStringified);
+			
+			Networking.postData(C.SERVER + "push", jsonStringified);
 			if (dataPushHandlerActive)
 				dataPushHandler.postDelayed(this, C.pushIntervalMillis);
 		}
@@ -83,9 +86,15 @@ public class StartLocating extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_start_locating);
-		dataPushHandler = new Handler();
+		final Context self = this;
+		dataPushHandler = new Handler() {
+            public void handleMessage(Message m) {
+            	String error = m.getData().getString("error");
+                Toast.makeText(self, error, Toast.LENGTH_SHORT).show();
+            }
+        };
 		dataPushHandlerActive = false;
-		ErrorReporting.initialize(this);
+		ErrorReporting.initialize(dataPushHandler);
 
 		// PROVIDERS
 		providers = new LinkedList<DataProvider>();

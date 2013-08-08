@@ -11,6 +11,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.os.Looper;
 import android.util.Log;
 
 public class Networking {
@@ -19,7 +20,7 @@ public class Networking {
 			
 			@Override
 			public void run() {
-
+				Looper.prepare();
 			    try {
 					 // Create a new HttpClient and Post Header
 				    HttpClient httpclient = new DefaultHttpClient();
@@ -29,9 +30,9 @@ public class Networking {
 			        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			        nameValuePairs.add(new BasicNameValuePair("data", data));
 			        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-			        // Execute HTTP Post Request
-			        httpclient.execute(httppost);
+			       
+				        // Execute HTTP Post Request
+				        httpclient.execute(httppost);
 			        
 			    } catch (Exception e) {
 			        Log.d(C.TAG, "Exception while making HTTP Request: " + e.getMessage());
