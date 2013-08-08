@@ -28,11 +28,25 @@ def hello():
 def data():
     if 'data' not in request.form:
         return 'Nothing received'
+        # Test code:
+        # request.form = {'data' : json.dumps([
+        #         {'name' : 'sensors',
+        #          'data' : 'shit'},
+        #         {'name' : 'wifi',
+        #          'data' : [{'label' : 'blah',
+        #                     'estimatedDistance' : 10}]}])}
     data = json.loads(request.form['data'])
 
     wifi_magic = WifiMagic()
+        
+    walls = get_db('walls')
 
-    sensors_magic = SensorsMagic()
+    if SensorsMagic.USE_WALLS and  not walls:
+        with open('walls/walls.txt', 'r') as json_walls:
+            walls = json.load(json_walls)
+        set_db('walls', frozenset([tuple(point) for point in walls]))
+        
+    sensors_magic = SensorsMagic(walls)
 
     saved_particles = get_db("particles")
     pf = ParticleFilter(particles=saved_particles)
@@ -45,7 +59,8 @@ def data():
             result = wifi_magic.parse(d['data'])
             set_db("router_dist", result)
             result = wifi_magic.update_particles(pf.get_particles(), result)
-
+    
+    
     pf.resample();
     set_db("particles", pf.get_particles())
     print "Particles updated to", pf.get_position(), " (var:", pf.get_std(),")"

@@ -10,6 +10,14 @@ class SensorsMagic:
     vardist = 0.3
     head = 20.0
     varhead = 20.0
+    
+    USE_WALLS = False
+
+    TICKS = 3
+
+    def __init__(self, walls=None):
+        self.walls = walls
+
     def parse(self, data):
         return data
 
@@ -30,8 +38,21 @@ class SensorsMagic:
             dx,dy = self._get_vector(particle['heading'], ddist)
             dx *= self.PIXELS_PER_METER
             dy *= self.PIXELS_PER_METER
-            x,y = particle['position']
-            particle['position'] = (x+dx, y+dy)
+            (x1,y1) = particle['position']
+            (x2,y2) = (x1+dx, y1+dy)
+            if self.USE_WALLS and not self.is_move_legal(x1, y1, x2, y2):
+                particle['weight'] = 0
+            particle['position'] = (x2, y2)
             self._sanitize(particle)
         return particles
 
+    def is_move_legal(self, x1, y1, x2, y2):
+        if not self.walls:
+            return True
+        for i in range(self.TICKS):
+            to_check = (round((i + 1.0) * (x2 - x1)/self.TICKS + x1),
+                        round((i + 1.0) * (y2 - y1)/self.TICKS + y1))
+            if to_check in self.walls:
+                return False
+        return True
+            
