@@ -4,17 +4,36 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script>
             var canvas, context;
-            function draw_point(context, x, y) {
-                context.fillStyle='#FF0000';
+
+            function draw_point(x, y, color) {
+                context.fillStyle=color;
                 context.fillRect(x,y,5,5);
             }
+            function draw_name(text, x, y, color) {
+                context.fillStyle=color;
+                context.fillText(text,x,y);
+            }
+            function ajax_router_request() {
+                $.get(
+                    '/router_info',
+                    function(data){
+                        routerLocArray = data;
+                    },
+                    'json'
+                );
+            }
+
             function ajax_request() {
                 $.get(
                     '/sample_particles',
                     function(data){
                         context.clearRect(0,0,5800,780);
                         $.each(data, function(index, value){
-                            draw_point(context, value[0], value[1]);
+                            draw_point(value[0], value[1], '#FF0000');
+                        });
+                        $.each(routerLocArray, function(key, value){
+                            draw_point(value[0], value[1], '#0000FF');
+                            draw_name(key, value[0], value[1], '#0000FF');
                         });
                     },
                     'json'
@@ -25,6 +44,7 @@
                 canvas = $("#map")[0];
                 context = canvas.getContext('2d');
                 console.log("Hi, I am Javascript, and I am retarded! Nice to meet you!");
+                ajax_router_request();
                 setInterval(ajax_request, 500);
             });
         </script>
