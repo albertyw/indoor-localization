@@ -1,4 +1,4 @@
 #!/bin/bash
-pypy base.py
+python base.py
 sleep 2s
 ./run_server.sh

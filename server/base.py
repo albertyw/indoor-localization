@@ -3,6 +3,8 @@ Flask server to accept data from android phones
 """
 
 import json
+import pickle
+
 from flask import Flask, request, g
 
 app = Flask(__name__, static_folder='static', static_url_path='/static')
@@ -29,13 +31,15 @@ def hello():
 def data():
     if 'data' not in request.form:
         return 'Nothing received'
-        # Test code:
+        #Test code:
         # request.form = {'data' : json.dumps([
-        #         {'name' : 'sensors',
-        #          'data' : 'shit'},
-        #         {'name' : 'wifi',
-        #          'data' : [{'label' : 'blah',
-        #                     'estimatedDistance' : 10}]}])}
+#                 {'name' : 'sensors',
+#                  'data' : 'shit'},
+#                 {'name' : 'wifi',
+#                  'data' : [{'label' : 'blah',
+#                             'level' : -56,
+#                             'freqMhz' : 2600,
+#                             'estimatedDistance' : 10}]}])}
     data = json.loads(request.form['data'])
 
     wifi_magic = WifiMagic()
@@ -43,9 +47,9 @@ def data():
     walls = get_db('walls')
 
     if SensorsMagic.USE_WALLS and  not walls:
-        with open('walls/walls.txt', 'r') as json_walls:
-            walls = json.load(json_walls)
-        set_db('walls', frozenset([tuple(point) for point in walls]))
+        with open('walls/walls.p', 'r') as pickled_set:
+            walls = pickle.load(pickled_set)
+        set_db('walls', walls)
     sensors_magic = SensorsMagic(walls)
     wifi_deep_magic = WifiDeeperMagic(cache)
 
