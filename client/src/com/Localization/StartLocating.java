@@ -81,6 +81,7 @@ public class StartLocating extends Activity {
 		}
 	}
 
+	Toast previousToast;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +91,10 @@ public class StartLocating extends Activity {
 		dataPushHandler = new Handler() {
             public void handleMessage(Message m) {
             	String error = m.getData().getString("error");
-                Toast.makeText(self, error, Toast.LENGTH_SHORT).show();
+            	if (previousToast != null) previousToast.cancel();
+                Toast toast = Toast.makeText(self, error, Toast.LENGTH_SHORT);
+                toast.show();
+                previousToast = toast;
             }
         };
 		dataPushHandlerActive = false;

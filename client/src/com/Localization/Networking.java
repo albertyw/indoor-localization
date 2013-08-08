@@ -24,9 +24,10 @@ public class Networking {
 			    try {
 					 // Create a new HttpClient and Post Header
 				    HttpClient httpclient = new DefaultHttpClient();
+				    
 				    HttpPost httppost = new HttpPost(server);
-
-			        // Add your data
+				    
+				    // Add your data
 			        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			        nameValuePairs.add(new BasicNameValuePair("data", data));
 			        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
