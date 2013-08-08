@@ -57,14 +57,21 @@ def get():
     pf = ParticleFilter(particles=saved_particles)
     return 'mean: '+ str(pf.get_position()) + ', std: ' +str(pf.get_std())
 
-@app.route("/sample_particles")
+@app.route("/get_system_state")
+def get_system_state():
+    return json.dumps({
+                        'particles' : sample_particles(),
+                        'router_distances' : get_router_dist()
+                      })
+
+
 def sample_particles():
     saved_particles = get_db("particles")
     if saved_particles:
         samples = [particle['position'] for particle in sample(saved_particles, 50)]
     else:
         samples = []
-    return json.dumps(samples)
+    return samples
 
 @app.route("/check_persistance")
 def check_persistance():
@@ -87,12 +94,12 @@ def send_router_info():
     routers = WifiMagic.ROUTER_POS
     return json.dumps(routers)
 
-@app.route("/router_dist")
-def send_router_dist():
-    dists = get_db('router_dist')
-    if dists:
-        return json.dumps(dists)
-    return json.dumps([])
+def get_router_dist():
+    distsM = get_db('router_dist')
+    distsM = distsM if distsM else []
+    distsPX = [ (d[0],d[1]*WifiMagic.PIXELS_PER_METER) for d in distsM ]
+        
+    return distsPX
 
 if __name__ == "__main__":
     app.debug = True

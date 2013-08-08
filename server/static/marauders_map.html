@@ -16,15 +16,16 @@
                 context.fillStyle=color;
                 context.fillText(text,x,y);
             }
-	    
+
 	    function draw_circle(x, y, radius) {
+                context.beginPath();
 	        context.arc(x, y, radius, 0, 2 * Math.PI, false);
 	        context.lineWidth = 1;
                 context.strokeStyle = "blue";
                 context.stroke();
 	    }
 
-            function ajax_router_request() {
+            function get_routerinfo() {
                 $.get(
                     '/router_info',
                     function(data){
@@ -34,29 +35,22 @@
                 );
             }
 
-	    function ajax_router_request() {
+            function update_system_state() {
                 $.get(
-                    '/router_dist',
+                    '/get_system_state',
                     function(data){
-                        routerDistArray = data;
-                    },
-                    'json'
-                );
-            }
+                        var particles = data['particles'];
+                        var router_distances  = data['router_distances'];
 
-            function ajax_request() {
-                $.get(
-                    '/sample_particles',
-                    function(data){
                         context.clearRect(0,0,5800,780);
-                        $.each(data, function(index, value){
+                        $.each(particles, function(index, value){
                             draw_point(value[0], value[1], '#FF0000');
                         });
                         $.each(routerLocArray, function(key, value){
                             draw_point(value[0], value[1], '#0000FF');
                             draw_name(key, value[0], value[1], '#0000FF');
                         });
-	                $.each(routerDistArray, function(key, value){
+	                $.each(router_distances, function(key, value){
                             draw_circle(value[0][0], value[0][1], value[1]);
                         });
                     },
@@ -68,8 +62,8 @@
                 canvas = $("#map")[0];
                 context = canvas.getContext('2d');
                 console.log("Hi, I am Javascript, and I am retarded! Nice to meet you!");
-                ajax_router_request();
-                setInterval(ajax_request, 500);
+                get_routerinfo();
+                setInterval(update_system_state, 500);
             });
         </script>
     </head>
