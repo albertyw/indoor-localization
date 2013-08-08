@@ -17,7 +17,7 @@ public class WifiMagic {
     public WifiMagic(Context c) {
     	 mainWifi = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
     	 macToName = new HashMap<String, String[]>();
-    	 fillMacToName();
+    	 fillMacToName(); 
     }
     
     public List getWifi() {
