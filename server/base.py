@@ -60,10 +60,11 @@ def get():
 @app.route("/sample_particles")
 def sample_particles():
     saved_particles = get_db()
-    samples = [particle['position'] for particle in sample(saved_particles, 50)]
-    #print json.dumps(samples)
+    if saved_particles:
+        samples = [particle['position'] for particle in sample(saved_particles, 50)]
+    else:
+        samples = []
     return json.dumps(samples)
-    #return json.dumps([(50, 50), (100, 170), (0, 500), (500, 0)])
 
 @app.route("/check_persistance")
 def check_persistance():
