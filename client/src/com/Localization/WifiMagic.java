@@ -8,8 +8,9 @@ import java.util.Map;
 import android.content.Context;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
+import android.net.wifi.WifiManager.WifiLock;
 
-public class WifiMagic {
+public class WifiMagic extends DataProvider {
     WifiManager mainWifi;
 
     Map<String, String[]> macToName;
@@ -20,7 +21,37 @@ public class WifiMagic {
     	 fillMacToName(); 
     }
     
-    public List getWifi() {
+    private WifiLock wifiLock;
+    
+    public void onStartPushing() {
+    	if (!canScanWifi()) return;
+    	assert wifiLock == null;
+    	wifiLock = mainWifi.createWifiLock("wifi_magic");
+    	wifiLock.acquire();
+    }
+    
+    public void onStopPushing() {
+    	if(!canScanWifi()) return;
+    	assert wifiLock.isHeld();
+    	wifiLock.release();
+    	wifiLock = null;
+    }
+    
+    public String getName() {
+    	return "wifi";
+    }
+    
+    public boolean canScanWifi() {
+    	boolean result = mainWifi.isWifiEnabled();
+    	/// result = result || mainWifi.isScanAlwaysAvailable();
+    	return result;
+    }
+    
+    public List getData() {
+    	if (!canScanWifi()) {
+    		ErrorReporting.maybeReportError("wifi not available");
+    		return null;
+    	}
 		mainWifi.startScan();
 		List jsonScanResults = new LinkedList();
 

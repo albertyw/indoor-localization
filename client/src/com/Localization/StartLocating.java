@@ -14,6 +14,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract.Contacts.Data;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
@@ -28,9 +29,6 @@ import org.json.simple.JSONValue;
 public class StartLocating extends Activity {
 
 	WifiManager mainWifi;
-    SensorManager sensorManager;
-    Sensor accSensor;
-    List accSensorReadings;
 
 	Handler dataPushHandler;
 	boolean dataPushHandlerActive;
@@ -39,14 +37,21 @@ public class StartLocating extends Activity {
 	
 	WifiMagic wifiMagic;
 
+	List<DataProvider> providers;
+
+	final int debug_level = 0;
+	
 	Runnable statusChecker = new Runnable() {
 		@Override 
 		public void run() {
 			List locationData = getAvailableData();
 			String jsonStringified = JSONValue.toJSONString(locationData);
-
-			Log.d(C.TAG, "JSON encoded data: " + jsonStringified.substring(0, 100) + (jsonStringified.length() > 100 ? "..." : ""));
-			Networking.postData(C.SERVER + "push", jsonStringified);
+			if (debug_level == 1) {
+				Log.d(C.TAG, "JSON encoded data: " + jsonStringified.substring(0, 100) + (jsonStringified.length() > 100 ? "..." : ""));
+			} else if (debug_level == 2){
+				Log.d(C.TAG, "JSON encoded data: " + jsonStringified);
+			}
+				Networking.postData(C.SERVER + "push", jsonStringified);
 			if (dataPushHandlerActive)
 				dataPushHandler.postDelayed(this, C.pushIntervalMillis);
 		}
@@ -54,9 +59,13 @@ public class StartLocating extends Activity {
 	
 	private void startPushing() {
 		dataPushHandlerActive = true;
-		statusChecker.run();
 		btnStopPushing.setEnabled(true);
 		btnStartPushing.setEnabled(false);
+		for (DataProvider p : providers) {
+			p.onStartPushing();
+		}
+		statusChecker.run();
+
 	}
 	
 	private void stopPushing() {
@@ -64,6 +73,9 @@ public class StartLocating extends Activity {
 		dataPushHandler.removeCallbacks(statusChecker);
 		btnStopPushing.setEnabled(false);
 		btnStartPushing.setEnabled(true);
+		for (DataProvider p : providers) {
+			p.onStopPushing();
+		}
 	}
 
 
@@ -75,6 +87,12 @@ public class StartLocating extends Activity {
 		dataPushHandlerActive = false;
 		ErrorReporting.initialize(this);
 
+		// PROVIDERS
+		providers = new LinkedList<DataProvider>();
+		providers.add(new SensorsMagic(this));
+		providers.add(new WifiMagic(this));
+		// END PROVIDERS
+		
 		btnStartPushing = (Button)findViewById(R.id.start_push);
 		btnStopPushing = (Button)findViewById(R.id.stop_pushing);
 		btnStopPushing.setEnabled(false);
@@ -94,25 +112,7 @@ public class StartLocating extends Activity {
 			}
 		});
 
-		wifiMagic = new WifiMagic(this);
 		
-        // Sensors
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        accSensorReadings = new LinkedList();
-        sensorManager.registerListener(new SensorEventListener() {
-            @Override
-            public void onSensorChanged(SensorEvent event) {
-                if(!dataPushHandlerActive) return;
-                HashMap reading = new HashMap();
-                reading.put("x", event.values[0]);
-                reading.put("y", event.values[1]);
-                reading.put("z", event.values[2]);
-                accSensorReadings.add(reading);
-            }
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy){}
-        }, accSensor, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
 	// Adds data to target if data is not null and denotes it as name
@@ -130,24 +130,17 @@ public class StartLocating extends Activity {
 
 		List result = new LinkedList();
 
+		for (DataProvider provider : providers) {
+			addData(result, provider.getName(), provider.getData());
+		}
 		
-        // Linear Accelerometer
-        addData(result, "sensors", getAcc());
 		
-		// Wifi
-		addData(result, "wifi", wifiMagic.getWifi());
-
 		Log.d(C.TAG, "Data extraction complete in " + (System.currentTimeMillis() - start) + " ms");
 		return result;
 	}
 
 	
 
-    protected List getAcc() {
-        List jsonScanResults = new LinkedList(accSensorReadings);
-        accSensorReadings.clear();
-        return jsonScanResults;
-    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
