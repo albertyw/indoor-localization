@@ -4,9 +4,11 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
         <script>
+            var failedServerRequests = 0;
+            var MaxFailedServerRequests = 15;
             var canvas, context;
             var routerLocArray = [];
-	    var routerDistArray = [];
+            var routerDistArray = [];
 
             function draw_point(x, y, color) {
                 context.fillStyle=color;
@@ -17,13 +19,13 @@
                 context.fillText(text,x,y);
             }
 
-	    function draw_circle(x, y, radius) {
+            function draw_circle(x, y, radius) {
                 context.beginPath();
-	        context.arc(x, y, radius, 0, 2 * Math.PI, false);
-	        context.lineWidth = 1;
+                context.arc(x, y, radius, 0, 2 * Math.PI, false);
+                context.lineWidth = 1;
                 context.strokeStyle = "blue";
                 context.stroke();
-	    }
+            }
 
             function get_routerinfo() {
                 $.get(
@@ -50,13 +52,17 @@
                             draw_point(value[0], value[1], '#0000FF');
                             draw_name(key, value[0], value[1], '#0000FF');
                         });
-	                $.each(router_distances, function(key, value){
+                        $.each(router_distances, function(key, value){
                             draw_circle(value[0][0], value[0][1], value[1]);
                         });
                         callback()
                     },
                     'json'
-                );
+                ).fail(function(){
+                    failedServerRequests += 1;
+                    console.log("Cannot get system state");
+                    if(failedServerRequests <= MaxFailedServerRequests) callback();
+                });
             }
 
             function start_updating() {
@@ -70,7 +76,7 @@
                 context = canvas.getContext('2d');
                 console.log("Hi, I am Javascript, and I am retarded! Nice to meet you!");
                 get_routerinfo();
-                start_updating()
+                start_updating();
             });
         </script>
     </head>
