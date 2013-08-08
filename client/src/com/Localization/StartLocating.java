@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
+
 
 import org.json.simple.JSONValue;
 
@@ -110,6 +112,27 @@ public class StartLocating extends Activity {
 		btnStopPushing = (Button)findViewById(R.id.stop_pushing);
 		btnStopPushing.setEnabled(false);
 		btnStartPushing.setEnabled(true);
+		Button btnDwa = (Button)findViewById(R.id.dwabtn);
+		Button btnWce = (Button)findViewById(R.id.wce);
+		
+		btnDwa.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				startActivity(new Intent(self, WifiAnalyzer.class));
+
+				
+			}
+		});
+		
+		btnWce.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(self, WifiCorrectionExtractor.class));
+				
+			}
+		});
 		
 		btnStartPushing.setOnClickListener(new OnClickListener() {
 			@Override

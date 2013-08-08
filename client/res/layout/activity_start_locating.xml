@@ -9,7 +9,7 @@
     tools:context=".StartLocating" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/extractor_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
@@ -18,9 +18,8 @@
         android:id="@+id/start_push"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="125dp"
+        android:layout_above="@+id/stop_pushing"
+        android:layout_alignParentRight="true"
         android:text="Start Pushing" />
 
     <Button
@@ -31,5 +30,23 @@
         android:layout_alignRight="@+id/start_push"
         android:layout_centerVertical="true"
         android:text="Stop Pushing" />
+
+    <Button
+        android:id="@+id/dwabtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/wce"
+        android:text="DWA" />
+
+    <Button
+        android:id="@+id/wce"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/extractor_text"
+        android:text="WCE" />
 
 </RelativeLayout>

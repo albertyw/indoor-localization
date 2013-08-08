@@ -1,5 +1,6 @@
 from os import listdir
 from os.path import dirname,realpath, isfile, join
+import json
 
 
 
@@ -9,7 +10,7 @@ class WifiDeeperMagic: # aka router signal correction
     BASE_DIR = dirname(realpath(__file__))
     WIFI_FOLDER_PATH = join(BASE_DIR, WIFI_FOLDER_NAME)
 
-    ASSUMED_BASE_LEVEL = -40.0
+    ASSUMED_BASE_LEVEL = -48.0
 
     CACHED_NAME = "base_levels"
 
@@ -17,8 +18,9 @@ class WifiDeeperMagic: # aka router signal correction
         self.cache = cache
 
     def store_base_level(self, name, base_level):
-        handle = open(join(self.WIFI_FOLDER_PATH, name, "w"))
-        handle.write(str(base_level))
+        handle = open(join(self.WIFI_FOLDER_PATH, name), "w")
+        
+        handle.write(json.dumps({'l' : base_level}))
         self.cache.delete(self.CACHED_NAME)
 
     def read_base_levels(self):
@@ -30,7 +32,7 @@ class WifiDeeperMagic: # aka router signal correction
         base_levels = {}
         for reading in readings:
             handle = open(join(self.WIFI_FOLDER_PATH,reading),"r")
-            level = float(handle.read())
+            level = json.loads(handle.read())['l']
             base_levels[reading] = level
         return base_levels
 
