@@ -11,13 +11,17 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 public class SensorsMagic extends DataProvider {
-
+    String sensorName;
     SensorManager sensorManager;
 	Sensor sensor;
 	List sensorReadings;
 	boolean isPushing;
 
 	public SensorsMagic(Context c, int sensorType) {
+        if(sensorType == Sensor.TYPE_LINEAR_ACCELERATION)
+            sensorName = "Linear Accelerometer";
+        if(sensorType == Sensor.TYPE_MAGNETIC_FIELD)
+            sensorName = "Magnetometer";
 		isPushing = false;
         // Sensors
         sensorManager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
@@ -40,8 +44,7 @@ public class SensorsMagic extends DataProvider {
 	
 	@Override
 	public String getName() {
-
-		return "sensors";
+        return sensorName;
 	}
 
 	@Override
