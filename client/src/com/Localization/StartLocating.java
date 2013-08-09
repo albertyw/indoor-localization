@@ -8,15 +8,9 @@ import java.util.Map;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.net.wifi.ScanResult;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.ContactsContract.Contacts.Data;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
@@ -25,21 +19,14 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-
 import org.json.simple.JSONValue;
 
-// See http://www.androidsnippets.com/scan-for-wireless-networks
-
 public class StartLocating extends Activity {
-
-	WifiManager mainWifi;
 
 	static Handler dataPushHandler;
 	boolean dataPushHandlerActive;
 	Button btnStartPushing;
 	Button btnStopPushing;
-	
-	WifiMagic wifiMagic;
 
 	List<DataProvider> providers;
 
