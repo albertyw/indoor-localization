@@ -12,17 +12,17 @@ import android.hardware.SensorManager;
 
 public class SensorsMagic extends DataProvider {
 
-	SensorManager sensorManager;
-	Sensor accSensor;
-	List accSensorReadings;
+    SensorManager sensorManager;
+	Sensor sensor;
+	List sensorReadings;
 	boolean isPushing;
-	
-	public SensorsMagic(Context c) {
+
+	public SensorsMagic(Context c, int sensorType) {
 		isPushing = false;
         // Sensors
         sensorManager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
-        accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        accSensorReadings = new LinkedList();
+        sensor = sensorManager.getDefaultSensor(sensorType);
+        sensorReadings = new LinkedList();
         sensorManager.registerListener(new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
@@ -31,29 +31,30 @@ public class SensorsMagic extends DataProvider {
                 reading.put("x", event.values[0]);
                 reading.put("y", event.values[1]);
                 reading.put("z", event.values[2]);
-                accSensorReadings.add(reading);
+                sensorReadings.add(reading);
             }
             @Override
             public void onAccuracyChanged(Sensor sensor, int accuracy){}
-        }, accSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        }, sensor, SensorManager.SENSOR_DELAY_FASTEST);
 	}
 	
 	@Override
 	public String getName() {
+
 		return "sensors";
 	}
 
 	@Override
 	public Object getData() {
-        List jsonScanResults = new LinkedList(accSensorReadings);
-        accSensorReadings.clear();
+        List jsonScanResults = new LinkedList(sensorReadings);
+        sensorReadings.clear();
         return jsonScanResults;
 	}
 	
 	@Override
 	public void onStartPushing() {
 		super.onStartPushing();
-		accSensorReadings.clear();
+		sensorReadings.clear();
 		isPushing = true;
 	}
 	

@@ -104,7 +104,8 @@ public class StartLocating extends Activity {
 
 		// PROVIDERS
 		providers = new LinkedList<DataProvider>();
-		providers.add(new SensorsMagic(this));
+		providers.add(new SensorsMagic(this, Sensor.TYPE_LINEAR_ACCELERATION));
+        providers.add(new SensorsMagic(this, Sensor.TYPE_MAGNETIC_FIELD));
 		providers.add(new WifiMagic(this));
 		// END PROVIDERS
 		
