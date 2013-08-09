@@ -72,6 +72,7 @@ def data():
     for d in data:
         if d['name'] == 'sensors':
             result = sensors_magic.parse(d['data'])
+            print 'dheading: %f' % result['dheading']
             sensors_magic.update_particles(pf.get_particles(), result)
         if d['name'] == 'wifi':
             wifidata = d['data']
