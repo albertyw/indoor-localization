@@ -2,7 +2,7 @@ from random import uniform
 import math
 
 class ParticleFilter:
-    num_particles = 1000
+    num_particles = 500
     grid_dim = (5800.0, 780.0)
 
     def __init__(self, particles=None):

@@ -107,10 +107,14 @@ def get():
 
 @app.route("/get_system_state")
 def get_system_state():
+    saved_particles = get_db("particles")
+    pf = ParticleFilter(particles=saved_particles)
     p.start('system_state_generation')
     result = json.dumps({
-                        'particles' : sample_particles(),
-                        'router_distances' : get_router_dist()
+                        'particles' : sample_particles(saved_particles),
+                        'router_distances' : get_router_dist(),
+                        'mean' : pf.get_position(),
+                        'std' : pf.get_std()
                       })
     p.pstop('system_state_generation')
     return result
@@ -125,8 +129,7 @@ def update_base_level():
     return "thank you"
 
 
-def sample_particles():
-    saved_particles = get_db("particles")
+def sample_particles(saved_particles):
     if saved_particles:
         samples = [particle['position'] for particle in sample(saved_particles,300)]
     else:

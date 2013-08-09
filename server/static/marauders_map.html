@@ -19,11 +19,11 @@
                 context.fillText(text,x,y);
             }
 
-            function draw_circle(x, y, radius) {
+            function draw_circle(x, y, radius, color) {
                 context.beginPath();
                 context.arc(x, y, radius, 0, 2 * Math.PI, false);
                 context.lineWidth = 1;
-                context.strokeStyle = "blue";
+                context.strokeStyle = color;
                 context.stroke();
             }
 
@@ -45,6 +45,7 @@
                         var router_distances  = data['router_distances'];
 
                         context.clearRect(0,0,5800,780);
+
                         $.each(particles, function(index, value){
                             draw_point(value[0], value[1], '#FF0000');
                         });
@@ -53,8 +54,16 @@
                             draw_name(key, value[0], value[1], '#0000FF');
                         });
                         $.each(router_distances, function(key, value){
-                            draw_circle(value[0][0], value[0][1], value[1]);
+                            draw_circle(value[0][0], value[0][1], value[1], "blue");
                         });
+                        var mean = data['mean']
+                        var std = data['std'];
+                        var std = Math.max(std[0],std[1]);
+                        for (var i = 1; i<=3; ++i) {
+                            draw_circle(mean[0],mean[1],i,"green");
+                        }
+                        draw_circle(mean[0],mean[1], std,"green");
+
                         callback()
                     },
                     'json'
