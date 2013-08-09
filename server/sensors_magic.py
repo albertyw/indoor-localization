@@ -9,7 +9,7 @@ class SensorsMagic:
     dist = 0.3
     vardist = 0.3
     head = 20.0
-    varhead = 20.0
+    varhead = 2.5
     
     USE_WALLS = True
 
@@ -32,7 +32,7 @@ class SensorsMagic:
 
     def update_particles(self, particles, result):
         for particle in particles:
-            dhead = self.head + uniform(-self.varhead,self.varhead)
+            dhead = self.head + uniform(-self.varhead,self.varhead) + result['dheading']
             ddist = self.dist + uniform(-self.vardist,self.vardist)
             particle['heading'] = (particle['heading'] + dhead) % 360.0
             dx,dy = self._get_vector(particle['heading'], ddist)
