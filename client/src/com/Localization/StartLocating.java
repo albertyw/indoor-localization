@@ -7,6 +7,7 @@ import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.hardware.Sensor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -75,6 +76,10 @@ public class StartLocating extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+	    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+		
 		setContentView(R.layout.activity_start_locating);
 		final Context self = this;
 		dataPushHandler = new Handler() {

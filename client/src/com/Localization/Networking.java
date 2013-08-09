@@ -11,38 +11,38 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
 import android.os.Looper;
 import android.util.Log;
 
 public class Networking {
+	private static AsyncHttpClient client = new AsyncHttpClient();
+
+	private static double lastTime = 0.0;
+	private static int requests = 0;
+
 	public static void postData(final String server, final String data) {
-		Thread t = new Thread(new Runnable() {
-			
+		if (client == null) {
+			client = new AsyncHttpClient();
+		}
+		RequestParams params = new RequestParams();
+		params.put("data", data);
+		client.post(server, params, new AsyncHttpResponseHandler() {
 			@Override
-			public void run() {
-				Looper.prepare();
-			    try {
-					 // Create a new HttpClient and Post Header
-				    HttpClient httpclient = new DefaultHttpClient();
-				    
-				    HttpPost httppost = new HttpPost(server);
-				    
-				    // Add your data
-			        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			        nameValuePairs.add(new BasicNameValuePair("data", data));
-			        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			       
-				        // Execute HTTP Post Request
-				        httpclient.execute(httppost);
-			        
-			    } catch (Exception e) {
-			        Log.d(C.TAG, "Exception while making HTTP Request: " + e.getMessage());
-			        ErrorReporting.maybeReportError("Can't connect.");
-			    }
-			        
+			public void onSuccess(String arg0) {
+				super.onSuccess(arg0);
+				++requests;
+				if (lastTime +1000.0<System.currentTimeMillis()) {
+					Log.d(C.TAG, "Requests in last seconds: " + requests);
+					requests = 0;
+					lastTime = System.currentTimeMillis();
+
+				}
+
 			}
 		});
-		t.start();
-	   
 	} 
 }
