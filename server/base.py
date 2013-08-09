@@ -4,6 +4,7 @@ Flask server to accept data from android phones
 
 import json
 import pickle
+import sys
 
 from flask import Flask, request, g
 
@@ -36,6 +37,7 @@ def reset():
 
 @app.route("/push", methods=['GET','POST'])
 def data():
+    print "starting push logic"
     p.start("entire_push")
     if 'data' not in request.form:
         return 'Nothing received'
@@ -54,7 +56,8 @@ def data():
 
     wifi_magic = WifiMagic()
     wifi_deep_magic = WifiDeeperMagic(cache)
-    
+
+    walls = None
     p.start('sensors')
     sensors_magic = SensorsMagic(walls)
     p.pstop('sensors')
@@ -130,15 +133,17 @@ def sample_particles():
         samples = []
     return samples
 
-@app.route("/check_persistance")
-def check_persistance():
-    old_shit = get_db("particles")
-    print 'old particles:'
-    print old_shit
-    rand_shit = random()
-    print 'going to add: %f' % rand_shit
-    save_db(rand_shit)
-    return json.dumps((old_shit, rand_shit))
+#@app.route("/check_persistance")
+#def check_persistance():
+#    old_shit = get_db("particles")
+#    print 'old particles:'
+#    print old_shit
+#    ndle = open('walls/walls.p', 'r')
+#rand_shit = random()
+#    print 'going to add: %f' % rand_shit
+#    save_db(rand_shit)
+#    return json.dumps((old_shit, rand_shit))
+
 
 def get_db(name):
     return cache.get(name)
@@ -159,8 +164,10 @@ def get_router_dist():
     return distsPX
 
 if __name__ == "__main__":
-    app.debug = True
-    file_handle = open('walls/walls.p', 'r')
-    walls = pickle.load(file_handle)
-    file_handle.close()
+    app.debug = True if (len(sys.argv)>1 and sys.argv[1] == 'debug') else False
+    if app.debug:
+        print 'RUNNING IN DEBUG MODE. SHUT IT. ITS CRAP'
+    if SensorsMagic.USE_WALLS:
+        with open('walls/walls.p', 'r') as pickled_set:
+            set_db('walls', pickle.load(pickled_set))
     app.run(host='0.0.0.0', port=80)

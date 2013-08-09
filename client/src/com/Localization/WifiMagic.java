@@ -32,9 +32,9 @@ public class WifiMagic extends DataProvider {
 	Map<String, Integer> macToFreqMhz;
 	Map<String, Integer> notSeenForXManyReadings;
 
-	private static final double remembering = 0.9;
-	private static final int updateLevelsEveryMillis = 100;
-	private static final int removeMacAfterNotSeenForMillis = 300;
+	private static final double remembering = 0.5;
+	private static final int updateLevelsEveryMillis = 200;
+	private static final int removeMacAfterNotSeenForMillis = 400;
 	private static final int HOW_MANY_NOT_SEEN_BEFORE_REMOVE = (removeMacAfterNotSeenForMillis / updateLevelsEveryMillis);
 
 	Runnable updateReadings = new Runnable() {

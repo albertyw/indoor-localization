@@ -43,6 +43,12 @@ public class Networking {
 				}
 
 			}
+			
+			@Override
+			public void onFailure(Throwable arg0) {
+				super.onFailure(arg0);
+				ErrorReporting.maybeReportError("Packet dropped due to: " + arg0.getMessage());
+			}
 		});
 	} 
 }

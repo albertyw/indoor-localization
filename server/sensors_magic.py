@@ -6,14 +6,14 @@ class SensorsMagic:
     grid_dim = (5800.0, 780.0)
     PIXELS_PER_METER = 22.6
 
-    dist = 0.4
-    vardist = 0.3
+    dist = 0.5
+    vardist = 0.5
     head = 20.0
     varhead = 20.0
     
     USE_WALLS = True
 
-    TICKS = 3
+    TICKS = 5
 
     def __init__(self, walls=None):
         self.walls = walls

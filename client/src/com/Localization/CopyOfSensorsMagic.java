@@ -10,24 +10,19 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-public class SensorsMagic extends DataProvider {
-    /*
-    String sensorName;
-    SensorManager sensorManager;
-	Sensor sensor;
-	List sensorReadings;
-	boolean isPushing;
+public class CopyOfSensorsMagic extends DataProvider {
 
-	public SensorsMagic(Context c, int sensorType) {
-        if(sensorType == Sensor.TYPE_LINEAR_ACCELERATION)
-            sensorName = "Linear Accelerometer";
-        if(sensorType == Sensor.TYPE_MAGNETIC_FIELD)
-            sensorName = "Magnetometer";
+	SensorManager sensorManager;
+	Sensor accSensor;
+	List accSensorReadings;
+	boolean isPushing;
+	
+	public CopyOfSensorsMagic(Context c) {
 		isPushing = false;
         // Sensors
         sensorManager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(sensorType);
-        sensorReadings = new LinkedList();
+        accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        accSensorReadings = new LinkedList();
         sensorManager.registerListener(new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
@@ -36,37 +31,37 @@ public class SensorsMagic extends DataProvider {
                 reading.put("x", event.values[0]);
                 reading.put("y", event.values[1]);
                 reading.put("z", event.values[2]);
-                sensorReadings.add(reading);
+                accSensorReadings.add(reading);
             }
             @Override
             public void onAccuracyChanged(Sensor sensor, int accuracy){}
-        }, sensor, SensorManager.SENSOR_DELAY_FASTEST);
-    */
-
-	public SensorsMagic(Context c) {
+        }, accSensor, SensorManager.SENSOR_DELAY_FASTEST);
 	}
+	
 	@Override
 	public String getName() {
-            return "sensors";
+		return "sensors";
 	}
 
 	@Override
 	public Object getData() {
-            //List jsonScanResults = new LinkedList(sensorReadings);
-			List jsonScanResults = new LinkedList();
-            jsonScanResults.add("siema");
-            //sensorReadings.clear();
-            return jsonScanResults;
+        List jsonScanResults = new LinkedList(accSensorReadings);
+        accSensorReadings.clear();
+        return jsonScanResults;
 	}
+	
 	@Override
 	public void onStartPushing() {
-	/*	super.onStartPushing();
-		sensorReadings.clear();
+		super.onStartPushing();
+		accSensorReadings.clear();
 		isPushing = true;
-        */
 	}
+	
 	@Override
 	public void onStopPushing() {
+		super.onStopPushing();
+		isPushing = false;
+		
 	}
 
 }
