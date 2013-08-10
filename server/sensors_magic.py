@@ -8,7 +8,7 @@ class SensorsMagic:
 
     dist = 0.3
     vardist = 0.3
-    head = 20.0
+    head = 0.0
     varhead = 2.5
     
     USE_WALLS = True
