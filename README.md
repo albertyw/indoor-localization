@@ -18,4 +18,7 @@ Albert Wang
 Pedro Jamaral
 Austin Collins
 
+We took many ideas from a former Hack Week project.  Their code is at
+https://github.com/zviadm/locator
+
 Thanks to Dropbox and Szymon for inviting us
