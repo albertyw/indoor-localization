@@ -15,7 +15,7 @@ Dropbox
 This project was created at Dropbox Hack Week 2013 (August 5-9) by
  - Szymon Sidor
  - Albert Wang @albertyw
- - Pedro Amaral @pjarmaral
+ - Pedro Amaral @pjamaral
  - Austin Collins @austindcollins
 
 Also note that several files have been purged and readded to the repository because they contained private Dropbox data.  The
