@@ -15,10 +15,10 @@ Dropbox
 This project was created at Dropbox Hack Week 2013 (August 5-9) by
 Szymon Sidor
 Albert Wang
-Pedro Jamaral
+Pedro Amaral
 Austin Collins
 
 We took many ideas from a former Hack Week project.  Their code is at
 https://github.com/zviadm/locator
 
-Thanks to Dropbox and Szymon for inviting us
+Thanks to Dropbox, Szymon, and our hosts for inviting us
