@@ -13,10 +13,13 @@ There is also a DropboxWifiAnalyzer android app that is used for sensor testing
 Dropbox
 =======
 This project was created at Dropbox Hack Week 2013 (August 5-9) by
-Szymon Sidor
-Albert Wang
-Pedro Amaral
-Austin Collins
+ - Szymon Sidor
+ - Albert Wang @albertyw
+ - Pedro Amaral @pjarmaral
+ - Austin Collins @austindcollins
+
+Also note that several files have been purged and readded to the repository because they contained private Dropbox data.  The
+git history (and therefore the `git log` and `git blame`) may not necessarily be correct.
 
 We took many ideas from a former Hack Week project.  Their code is at
 https://github.com/zviadm/locator
