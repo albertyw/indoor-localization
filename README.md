@@ -11,9 +11,9 @@ There is also a DropboxWifiAnalyzer android app that is used for sensor testing
 
 
 Dropbox
-=======
+-------
 This project was created at Dropbox Hack Week 2013 (August 5-9) by
- - Szymon Sidor
+ - Szymon Sidor @nivwusquorum
  - Albert Wang @albertyw
  - Pedro Amaral @pjamaral
  - Austin Collins @austindcollins
