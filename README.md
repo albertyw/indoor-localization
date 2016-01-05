@@ -25,3 +25,19 @@ We took many ideas from a former Hack Week project.  Their code is at
 https://github.com/zviadm/locator
 
 Thanks to Dropbox, Szymon, and our hosts for inviting us
+
+Discussion
+----------
+A large problem with using WiFi to do geolocation is that WiFi signals, at
+least in the 2.4 GHz range, easily reflect off of surfaces.  This means WiFi is
+capable of things like http://www.kurzweilai.net/wi-fi-signal-used-to-track-moving-humans-even-behind-walls
+but it also means it's hard to do geolocation without an accurate map of your building.
+
+Another problem is that the orientation of your antenna (plus design of antenna
+and receiver) affects signal levels.  This can conceivably be normalized using
+a dictionary of different mobile device models' properties and gyroscope data.
+
+You're welcome to use the code in this Github repository, though note that it
+didn't result in very accurate results.  We last worked on combining a map of
+known walls against inferred movement to narrow down the list of possible
+locations (i.e. a hidden markov model) but didn't finish it.
