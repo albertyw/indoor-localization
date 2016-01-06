@@ -41,3 +41,15 @@ You're welcome to use the code in this Github repository, though note that it
 didn't result in very accurate results.  We last worked on combining a map of
 known walls against inferred movement to narrow down the list of possible
 locations (i.e. a hidden markov model) but didn't finish it.
+
+Precision
+---------
+This project is not the only way to do geolocation.  If your accuracy
+requirements are at least 10 meters, and you know the locations and IP
+addresses of routers, you can use traceroute magic to find which router your
+device client is connected to.  This will allow you to guess approximately
+where your device is.  This has the added benefit of not requiring any special
+wifi receiver firmware nor any special permissions so something like Javascript
+in a web browser can perform this geolocation.
+
+(If you're outside, you may as well use GPS)
